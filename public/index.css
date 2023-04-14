@@ -1,0 +1,26 @@
+.container-resize{
+    width: 400px;
+    height: 200px;
+    border-radius: 10px;
+    padding: 20px;
+}
+#userProfile{
+    border-radius: 100%;
+}
+.dropdown-menu[data-bs-popper]{
+    left: -49px;
+}
+.dropdown-toggle::after {
+    content: none;
+}
+.dropdown-item:focus, .dropdown-item:hover{
+    background-color: rgb(152, 152, 152);
+}
+li{
+    width: 6rem;
+}
+.dropdown-menu{--bs-dropdown-min-width: 6rem;}
+.resize{
+    height: 250px;
+    width: 500px;
+}
