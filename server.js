@@ -104,6 +104,11 @@ app.get("/signOut", function (req, res) {
 );
 
 
+app.get("/compose",(req,res)=>{
+    res.send("Working")
+})
+
+
 
 app.listen(3000, () => {
     console.log("Server Started SuccessFully");

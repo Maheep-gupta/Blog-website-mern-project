@@ -24,3 +24,11 @@ li{
     height: 250px;
     width: 500px;
 }
+body{
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-top: 15px;
+}
+nav{
+    border-radius: 10px;
+}
