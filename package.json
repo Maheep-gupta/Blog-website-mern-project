@@ -25,6 +25,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "netlify-cli": "^13.2.2",
     "nodemon": "^2.0.22"
   }
 }
