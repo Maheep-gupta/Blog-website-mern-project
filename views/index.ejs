@@ -1,13 +1,19 @@
 <%- include('partials/header'); -%>
     <!-- Blogs -->
     <div class="row mt-5">
-        <div class="card m-auto" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+        <% myblogs.forEach(blog =>{ %>
+            <div class="card m-auto" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title"><%= blog.title %></h5>
+                    <p class="card-text"><%= blog.content.substring(0,10) %></p>
+                    <a href="/blogs/<%= blog.title %>" class="btn btn-primary" id="liveToastBtn">Read more</a>
+                </div>
             </div>
-        </div>
+
+          <% }); %>
+
+
+        
     </div>
 
 

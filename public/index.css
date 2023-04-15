@@ -1,3 +1,4 @@
+
 .container-resize{
     width: 400px;
     height: 200px;
@@ -31,4 +32,7 @@ body{
 }
 nav{
     border-radius: 10px;
+}
+.blog{
+    font-family: 'Comic Neue', cursive;
 }

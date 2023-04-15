@@ -1,8 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const ejs = require('ejs')
-const app = express();
+const _ = require('lodash')
 
+
+
+
+const app = express();
 app.set('view engine', 'ejs')
 // app.use(express.static("public"))
 app.use("/public", express.static(__dirname + "/public"));
@@ -15,7 +19,16 @@ var encryptedPassword;
 var decryptedEmail;
 var decryptedPassword;
 
-var userData=[]
+var userData = []
+var myBlogs = []
+
+myBlogs.push(
+    {
+        title: "Blog1",
+
+        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    }
+)
 
 
 // Encryption
@@ -49,9 +62,10 @@ const decrypt = (salt, encoded) => {
 
 var LoggedIn = false;
 app.get("/", function (req, res) {
-    res.render("index", { logger: LoggedIn })
+    res.render("index", { logger: LoggedIn, myblogs: myBlogs })
 }
 );
+
 
 
 
@@ -66,10 +80,10 @@ app.post("/signUp", function (req, res) {
     // Encryption
     encryptedEmail = crypt("salt", req.body.email);
     encryptedPassword = crypt("salt", req.body.password);
-    var newUser={
-        fullName:req.body.firstName+req.body.lastName,
-        email:encryptedEmail,
-        password:encryptedPassword
+    var newUser = {
+        fullName: req.body.firstName + req.body.lastName,
+        email: encryptedEmail,
+        password: encryptedPassword
     }
     userData.push(newUser)
     console.log(JSON.stringify(userData[0]))
@@ -78,8 +92,8 @@ app.post("/signUp", function (req, res) {
 );
 
 app.post("/login", function (req, res) {
-    console.log("logged encrypted mail:- "+crypt("salt", req.body.email));
-    console.log("logged encrypted pass:- "+crypt("salt", req.body.password));
+    console.log("logged encrypted mail:- " + crypt("salt", req.body.email));
+    console.log("logged encrypted pass:- " + crypt("salt", req.body.password));
 
     // Decryption
     // decryptedEmail = decrypt("salt", encryptedEmail);
@@ -104,10 +118,37 @@ app.get("/signOut", function (req, res) {
 );
 
 
-app.get("/compose",(req,res)=>{
-    res.send("Working")
+app.get("/compose", (req, res) => {
+    res.render("compose", { logger: LoggedIn })
+
 })
 
+
+app.post("/compose", (req, res) => {
+    var newBlog = {
+        title: (req.body.title).replace(/(<([^>]+)>)/gi, ""),
+        content: req.body.content
+    }
+    myBlogs.push(newBlog);
+
+    res.redirect("/")
+})
+
+app.get("/blogs/:blogName", (req, res) => {
+    const requestedUrl = _.lowerCase(req.params.blogName);
+    // const requestedUrl=req.params.blogName.toLowerCase();
+
+
+    for (let index = 0; index < myBlogs.length; index++) {
+        const blog = myBlogs[index];
+        console.log(blog.title)
+        if (requestedUrl === (_.lowerCase(blog.title))) {
+            res.render("blog", { logger: LoggedIn, blog: blog })
+        }
+
+    }
+
+})
 
 
 app.listen(3000, () => {

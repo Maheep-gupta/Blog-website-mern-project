@@ -28,6 +28,9 @@
 </head>
 
 <body class="">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+      </style>
     <!-- Navbar -->
     <!-- As a link -->
     <nav class="navbar navbar-expand-lg bg-dark bg-gradient">
@@ -45,10 +48,10 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <% if(!logger){ %>
                     <button class="btn btn-outline-primary me-2 bg-gradient" data-bs-toggle="modal"
-                        data-bs-target="#LoginModal" type="button" id="loginmodal">Login</button>
+                        data-bs-target="#LoginModal" type="button" id="loginmodal" >Login</button>
 
                     <button class="btn btn-primary bg-gradient" data-bs-toggle="modal" data-bs-target="#SignUpModal"
-                        type="button">SignUp</button>
+                        type="button" >SignUp</button>
                     <% } else {%>
                         <div class="dropdown" data-bs-theme="light">
                             <div class=" dropdown-toggle" type="button" id="dropdownMenuButtonLight"
@@ -212,3 +215,18 @@
 
         </div>
     </div>
+
+    <!-- Toast  -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <img src="..." class="rounded me-2" alt="...">
+            <strong class="me-auto">Message From Maheep</strong>
+            <!-- <small>11 mins ago</small> -->
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            Login Vaidation Is not Added Yet, So no need to Login or SignUp! Enjoy 
+          </div>
+        </div>
+      </div>
