@@ -33,7 +33,7 @@ var myBlogs = []
 
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/BlogsDB');
+mongoose.connect('mongodb+srv://maheepgupta:3RsGtiRBapc1RqLU@cluster0.j8jvfuc.mongodb.net/blogsDB');
 
 
 const db = mongoose.connection;
@@ -148,7 +148,6 @@ app.post("/login", function (req, res) {
 app.get("/signOut", function (req, res) {
     LoggedIn = false
     res.redirect("/")
-    // res.send("Blogs ")
 }
 );
 
