@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const ejs = require('ejs')
 const _ = require('lodash')
+const mongoose = require('mongoose');
 
 
 
@@ -22,13 +23,45 @@ var decryptedPassword;
 var userData = []
 var myBlogs = []
 
-myBlogs.push(
-    {
-        title: "Blog1",
+// myBlogs.push(
+//     {
+//         title: "Blog1",
 
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    }
-)
+//         content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+//     }
+// )
+
+
+
+mongoose.connect('mongodb://127.0.0.1:27017/BlogsDB');
+
+
+const db = mongoose.connection;
+
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback() {
+    console.log("Database is connected Successfully");
+});
+
+const blogSchema = new mongoose.Schema({
+    title: String,
+    content: String
+    // author: String,
+    // comments: [{ body: String, date: Date }],
+    // date: { type: Date, default: Date.now },
+    // hidden: Boolean,
+    // meta: {
+    //   votes: Number,
+    //   favs: Number
+    // }
+});
+
+const blogs = mongoose.model("blogs", blogSchema)
+
+
+
+
 
 
 // Encryption
@@ -44,7 +77,7 @@ const crypt = (salt, text) => {
         .map(byteHex)
         .join("");
 };
-
+// Decryption
 const decrypt = (salt, encoded) => {
     const textToChars = (text) => text.split("").map((c) => c.charCodeAt(0));
     const applySaltToChar = (code) => textToChars(salt).reduce((a, b) => a ^ b, code);
@@ -61,8 +94,10 @@ const decrypt = (salt, encoded) => {
 
 
 var LoggedIn = false;
-app.get("/", function (req, res) {
-    res.render("index", { logger: LoggedIn, myblogs: myBlogs })
+app.get("/", async (req, res) => {
+    const blogPost = await blogs.find({})
+    console.log(blogPost)
+    res.render("index", { logger: LoggedIn, myblogs: blogPost })
 }
 );
 
@@ -129,24 +164,25 @@ app.post("/compose", (req, res) => {
         title: (req.body.title).replace(/(<([^>]+)>)/gi, ""),
         content: req.body.content
     }
-    myBlogs.push(newBlog);
+
+    const data = new blogs({
+        title: (req.body.title).replace(/(<([^>]+)>)/gi, ""),
+        content: req.body.content
+    })
+
+    data.save()
+
+    // myBlogs.push(newBlog);
 
     res.redirect("/")
 })
 
-app.get("/blogs/:blogName", (req, res) => {
-    const requestedUrl = _.lowerCase(req.params.blogName);
-    // const requestedUrl=req.params.blogName.toLowerCase();
+app.get("/blogs/:blogName", async (req, res) => {
+    const requestedUrl = (req.params.blogName);
+    const blogPost = await blogs.findOne({ title: requestedUrl })
 
-
-    for (let index = 0; index < myBlogs.length; index++) {
-        const blog = myBlogs[index];
-        console.log(blog.title)
-        if (requestedUrl === (_.lowerCase(blog.title))) {
-            res.render("blog", { logger: LoggedIn, blog: blog })
-        }
-
-    }
+    res.render("blog", { logger: LoggedIn, blog: blogPost })
+    // mongoose.connection.close();
 
 })
 
